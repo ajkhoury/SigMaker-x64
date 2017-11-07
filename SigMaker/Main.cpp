@@ -111,7 +111,7 @@ plugin_t PLUGIN = {
     NULL,
     run,
     "Creates a unique signature",
-    "SigMaker plugin\n",
+    "SigMaker plugin",
     "SigMaker",
-    "Ctrl-Alt-S" // Alt-F11
+    "Ctrl-Alt-S"
 };
