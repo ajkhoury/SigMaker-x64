@@ -102,7 +102,7 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
 
     if (get_func_num( dwAddress ) != -1) // this just a check to see if the function is valid code
     {
-        sAutoSig_t TargetLocation;
+        AutoSig_t TargetLocation;
         TargetLocation.dwStartAddress = TargetLocation.dwCurrentAddress = dwAddress;
         TargetLocation.iOpCount = 0;
         TargetLocation.eType = PT_DIRECT;
@@ -124,7 +124,7 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
         if (dwCurrent == dwAddress)
             continue;
 
-        sAutoSig_t TargetLocation;
+        AutoSig_t TargetLocation;
         TargetLocation.dwStartAddress = TargetLocation.dwCurrentAddress = dwCurrent;
         TargetLocation.iOpCount = 0;
         TargetLocation.eType = PT_REFERENCE;
@@ -166,8 +166,7 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
                 if (dwCurrent == dwAddress)
                     continue;
 
-                sAutoSig_t TargetLocation;
-
+                AutoSig_t TargetLocation;
                 TargetLocation.dwStartAddress = pFunc->start_ea;
                 TargetLocation.dwCurrentAddress = dwCurrent;
                 TargetLocation.iOpCount = 0;
@@ -177,8 +176,10 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
                 nTotalCount++;
 
                 if (Settings.iMaxRefCount > 0)
+                {
                     if (nTotalCount >= Settings.iMaxRefCount)
                         break;
+                }
             }
         }
         else
@@ -244,7 +245,7 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
         {
             if (Settings.iLogLevel >= 3)
             {
-                msg( "[%x] Signature %s is viable candidate for final evaluation.", (*i).dwStartAddress, (*i).strSig.c_str( ) );
+                msg( "[%x] Signature %s is viable candidate for final evaluation.\n", (*i).dwStartAddress, (*i).strSig.c_str( ) );
             }
             refvecSig.push_back( (*i) );
         }

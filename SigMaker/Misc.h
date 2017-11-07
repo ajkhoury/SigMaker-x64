@@ -10,16 +10,15 @@ enum ePatternType {
     PT_REFERENCE
 };
 
-typedef struct {
+struct AutoSig_t {
     qstring strSig;
     ea_t dwStartAddress;
     ea_t dwCurrentAddress;
     int iHitCount;
     unsigned int iOpCount;
     ePatternType eType;
-} sAutoSig_t;
-
-typedef qvector<sAutoSig_t> qSigVector;
+};
+typedef qvector<AutoSig_t> qSigVector;
 
 
 typedef enum {
@@ -28,7 +27,7 @@ typedef enum {
     SIG_CRC,
 } SigType;
 
-typedef struct {
+struct Settings_t {
     int iSelectionType;
     unsigned int iMaxRefCount;
     int iKeepUnsafeData;
@@ -37,7 +36,7 @@ typedef struct {
     void Init( void );
     void Save( const char* pszFileName );
     void Load( const char* pszFileName );
-} Settings_t;
+};
 
 extern Settings_t Settings;
 

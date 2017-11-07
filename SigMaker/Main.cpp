@@ -3,66 +3,77 @@
  
 void ShowOptions( void )
 {
-    char szBuffer[MAXSTR];
-    qsnprintf( szBuffer, MAXSTR - 1, "%i", Settings.iMaxRefCount );
+    char szBuffer[MAXSTR] = "";
+    ushort selectionType, keepUnsafeData, logLevel;
 
-    int iResult = ask_form(
+    _itoa_s( Settings.iMaxRefCount, szBuffer, MAXSTR, 10 );
+    selectionType = (ushort)Settings.iSelectionType;
+    keepUnsafeData = (ushort)Settings.iKeepUnsafeData;
+    logLevel = (ushort)Settings.iLogLevel;
+
+    int iResult = ask_form( 
         "Options\n"
-        "<##choose the best sig from total length:R>\n" // 0
-        "<##choose the best sig from the amount of opcodes:R>\n" // 1
-        "<##choose the best sig by the smallest amount of wildcards:R>>\n\n" // 2
-        "<max. refs for auto generation(no limit = 0)\n:A2:100:10::>\n"
-        "<##add only relilable data to sigs(choose if unsure):R>\n" // 0
-        "<##include unsafe data in sigs(may produce better results):R>>\n\n" // 1
-        "<##disable logging:R>\n" // 0
-        "<##log results:R>\n" // 1
-        "<##log errors and results:R>\n" // 2
-        "<##log errors, results and interim steps of all proceedures:R>>\n\n" // 3
-        , &Settings.iSelectionType, szBuffer, &Settings.iKeepUnsafeData, &Settings.iLogLevel );
+        "<#Choose the best sig from total length:R>\n" // 0
+        "<#Choose the best sig from the amount of opcodes:R>\n" // 1
+        "<#Choose the best sig by the smallest amount of wildcards:R>>\n" // 2
+        "<Maximum refs for auto generation:A:20:10::>\n"
+        "<#Add only relilable data to sigs(choose if unsure):R>\n" // 0
+        "<#Include unsafe data in sigs(may produce better results):R>>\n" // 1
+        "<#Disable logging:R>\n" // 0
+        "<#Log results:R>\n" // 1
+        "<#Log errors and results:R>\n" // 2
+        "<#Log errors, results and interim steps of all proceedures:R>>\n" // 3
+        , &selectionType, szBuffer, &keepUnsafeData, &logLevel );
 
-    qsscanf( szBuffer, "%i", &Settings.iMaxRefCount );
-
-    Settings.Save( "sigmaker.ini" );
+    if (iResult > 0)
+    {
+        qsscanf( szBuffer, "%i", &Settings.iMaxRefCount );
+        Settings.iSelectionType = selectionType;
+        Settings.iKeepUnsafeData = keepUnsafeData;
+        Settings.iLogLevel = logLevel;
+        Settings.Save( "sigmaker.ini" );
+    }
 }
 
 bool idaapi run( size_t /*arg*/ )
 {
     int iAction = 0;
+
     int iResult = ask_form(
         "What do you want to do?\n"
-        "<##create ida pattern from selection:R>\n" // 0
-        "<##create code pattern from selection:R>\n" // 1
-        "<##create crc32 pattern from selection:R>\n" // 2
-        "<##auto create ida pattern:R>\n" // 3
-        "<##auto create code pattern:R>\n" // 4
-        "<##auto create crc32 pattern:R>\n" // 5
-        "<##test ida pattern:R>\n" // 6
-        "<##test code pattern:R>\n" // 7
-        "<##convert a sig:R>\n" // 8
-        "<##configure the plugin:R>>\n\n", // 9
-        &iAction );
+        "<#Auto create ida pattern:R>\n" // 0
+        "<#Auto create code pattern:R>\n" // 1
+        "<#Auto create crc32 pattern:R>\n" // 2
+        "<#Create ida pattern from selection:R>\n" // 3
+        "<#Create code pattern from selection:R>\n" // 4
+        "<#Create crc32 pattern from selection:R>\n" // 5
+        "<#Test ida pattern:R>\n" // 6
+        "<#Test code pattern:R>\n" // 7
+        "<#Convert a sig:R>\n" // 8
+        "<#Configure the plugin:R>>\n\n" // 9
+        , &iAction );
 
     if (iResult > 0)
     {
         switch (iAction)
         {
-        case 0: 
-            CreateSig( SIG_IDA );
-            break;
-        case 1: 
-            CreateSig( SIG_CODE );
-            break;
-        case 2: 
-            CreateSig( SIG_CRC );
-            break;
-        case 3: 
+        case 0:
             GenerateSig( SIG_IDA );
             break;
-        case 4: 
+        case 1:
             GenerateSig( SIG_CODE );
             break;
-        case 5: 
+        case 2:
             GenerateSig( SIG_CRC );
+            break;
+        case 3: 
+            CreateSig( SIG_IDA );
+            break;
+        case 4: 
+            CreateSig( SIG_CODE );
+            break;
+        case 5: 
+            CreateSig( SIG_CRC );
             break;
         case 6: 
             ShowSearchWindow( );
@@ -82,7 +93,7 @@ bool idaapi run( size_t /*arg*/ )
     return true;
 }
 
-int __stdcall init( void )
+int idaapi init( void )
 {
     if (inf.filetype != f_PE)
         return PLUGIN_SKIP;
@@ -93,15 +104,14 @@ int __stdcall init( void )
     return PLUGIN_OK;
 }
 
-plugin_t PLUGIN =
-{
+plugin_t PLUGIN = {
     IDP_INTERFACE_VERSION,
     PLUGIN_KEEP,
     init,
     NULL,
     run,
-    "creates a sigs",
+    "Creates a unique signature",
     "SigMaker plugin\n",
     "SigMaker",
-    "Ctrl-Alt-S"// Alt-F11
+    "Ctrl-Alt-S" // Alt-F11
 };
