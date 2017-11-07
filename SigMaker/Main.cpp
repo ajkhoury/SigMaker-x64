@@ -3,13 +3,13 @@
  
 void ShowOptions( void )
 {
-    char szBuffer[MAXSTR] = "";
     ushort selectionType, keepUnsafeData, logLevel;
+    char szBuffer[MAXSTR] = { 0 };
 
-    _itoa_s( Settings.iMaxRefCount, szBuffer, MAXSTR, 10 );
     selectionType = (ushort)Settings.iSelectionType;
     keepUnsafeData = (ushort)Settings.iKeepUnsafeData;
     logLevel = (ushort)Settings.iLogLevel;
+    _itoa_s( Settings.iMaxRefCount, szBuffer, MAXSTR, 10 );
 
     int iResult = ask_form( 
         "Options\n"
@@ -27,10 +27,10 @@ void ShowOptions( void )
 
     if (iResult > 0)
     {
-        qsscanf( szBuffer, "%i", &Settings.iMaxRefCount );
         Settings.iSelectionType = selectionType;
         Settings.iKeepUnsafeData = keepUnsafeData;
         Settings.iLogLevel = logLevel;
+        qsscanf( szBuffer, "%i", &Settings.iMaxRefCount );      
         Settings.Save( "sigmaker.ini" );
     }
 }

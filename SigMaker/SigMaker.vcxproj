@@ -128,11 +128,11 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug64|x64'">
-    <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)64</TargetName>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -145,12 +145,10 @@
     <EmbedManifest>false</EmbedManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release64|x64'">
-    <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
     <TargetName>$(ProjectName)64</TargetName>
@@ -193,12 +191,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SIGMAKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IDADIR)\idasdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(IDADIR)\plugins\sigmaker.dll</OutputFile>
       <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EnableUAC>false</EnableUAC>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug64|x64'">
@@ -209,12 +209,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;__X64__;__EA64__;SIGMAKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IDADIR)\idasdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(IDADIR)\plugins\sigmaker64.dll</OutputFile>
       <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EnableUAC>false</EnableUAC>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -299,39 +301,27 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>Full</Optimization>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SIGMAKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <OpenMPSupport>false</OpenMPSupport>
       <AdditionalIncludeDirectories>$(IDADIR)\idasdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(IDADIR)\plugins\sigmaker.dll</OutputFile>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <NoEntryPoint>false</NoEntryPoint>
-      <AdditionalDependencies>ida.lib;pro.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/EXPORT:PLUGIN %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>false</DataExecutionPrevention>
-      <AllowIsolation>true</AllowIsolation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release64|x64'">
     <ClCompile>
@@ -339,33 +329,24 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>Full</Optimization>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;__X64__;__EA64__;SIGMAKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <AdditionalIncludeDirectories>$(IDADIR)\idasdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(IDADIR)\plugins\sigmaker64.dll</OutputFile>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <NoEntryPoint>false</NoEntryPoint>
       <AdditionalDependencies>ida.lib;pro.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/EXPORT:PLUGIN %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>false</DataExecutionPrevention>
-      <AllowIsolation>true</AllowIsolation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
