@@ -55,7 +55,11 @@ void SearchForSigs( const qstring& strSig )
     {
         do
         {
-            msg( "sig found at %x\n", dwAddress );
+#ifdef __X64__
+			msg("sig found at 1%x\n", dwAddress);
+#else
+			msg("sig found at %x\n", dwAddress);
+#endif
             dwAddress = find_binary( dwAddress + 1, inf.max_ea, strSig.c_str( ), 16, SEARCH_DOWN );
         } while (IsValidEA( dwAddress ));
     }
@@ -67,7 +71,11 @@ void SearchForSigs( const qstring& strSig )
         {
             do
             {
-                msg( "sig found at %x\n", dwAddress );
+#ifdef __X64__
+                msg( "sig found at 1%x\n", dwAddress );
+#else
+				msg("sig found at %x\n", dwAddress);
+#endif
                 dwAddress = find_binary( dwAddress + 1, inf.omax_ea, strSig.c_str( ), 16, SEARCH_DOWN );
             } while (IsValidEA( dwAddress ));
         }
