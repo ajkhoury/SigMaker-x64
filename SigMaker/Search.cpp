@@ -55,7 +55,7 @@ void SearchForSigs( const qstring& strSig )
     {
         do
         {
-#ifdef __X64__
+#ifdef __EA64__
 			msg("sig found at 1%X\n", dwAddress);
 #else
 			msg("sig found at %X\n", dwAddress);
@@ -71,7 +71,7 @@ void SearchForSigs( const qstring& strSig )
         {
             do
             {
-#ifdef __X64__
+#ifdef __EA64__
                 msg( "sig found at 1%X\n", dwAddress );
 #else
 				msg("sig found at %X\n", dwAddress);
