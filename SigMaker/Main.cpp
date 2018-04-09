@@ -95,9 +95,6 @@ bool idaapi run( size_t /*arg*/ )
 
 int idaapi init( void )
 {
-    if (inf.filetype != f_PE)
-        return PLUGIN_SKIP;
-
     Settings.Init( );
     Settings.Load( "sigmaker.ini" );
 
