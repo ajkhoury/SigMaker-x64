@@ -2,6 +2,7 @@
 
 IDA SigMaker Plugin updated for the IDA Pro 7.0 SDK.
 
+PLEASE NOTE: IDA Freeware 7.0 is NOT supported. 
 
 
 Originally made by P4TR!CK
