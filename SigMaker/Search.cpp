@@ -14,72 +14,39 @@ int GetOccurenceCount( const qstring& strSig, bool bSkipOut = false )
     int iCount = 0;
     ea_t dwAddress = find_binary( inf.min_ea, inf.max_ea, strSig.c_str( ), 16, SEARCH_DOWN );
 
-    if (IsValidEA( dwAddress ))
-    {
-        do
-        {
-            if (bSkipOut == true && iCount >= 2)
-                return iCount;
-
-            iCount++;
-            dwAddress = find_binary( dwAddress + 1, inf.max_ea, strSig.c_str( ), 16, SEARCH_DOWN );
-        } while (IsValidEA( dwAddress ));
-    }
-    else
-    {
-        dwAddress = find_binary( inf.omin_ea, inf.omax_ea, strSig.c_str( ), 16, SEARCH_DOWN );
-        if (IsValidEA( dwAddress ))
-        {
-            do
-            {
-                if (bSkipOut == true && iCount >= 2)
-                    return iCount;
-                iCount++;
-                dwAddress = find_binary( dwAddress + 1, inf.omax_ea, strSig.c_str( ), 16, SEARCH_DOWN );
-            } while (IsValidEA( dwAddress ));
-        }
-    }
+	dwAddress = find_binary(inf.omin_ea, inf.omax_ea, strSig.c_str(), 16, SEARCH_DOWN);
+	if (IsValidEA(dwAddress))
+	{
+		do
+		{
+			if (bSkipOut == true && iCount >= 2)
+				return iCount;
+			iCount++;
+			dwAddress = find_binary(dwAddress + 1, inf.omax_ea, strSig.c_str(), 16, SEARCH_DOWN);
+		} while (IsValidEA(dwAddress));
+	}
 
     return iCount;
 }
 
 void SearchForSigs( const qstring& strSig )
 {
-    ea_t dwAddress = find_binary( inf.min_ea, inf.max_ea, strSig.c_str( ), 16, SEARCH_DOWN );
+    ea_t dwAddress = find_binary( inf.omin_ea, inf.omax_ea, strSig.c_str( ), 16, SEARCH_DOWN );
 
     const char* pszMessage = "===========================\n";
 
     msg( pszMessage );
 
-    if (IsValidEA( dwAddress ))
-    {
-        do
-        {
-#ifdef __EA64__
-			msg("sig found at 1%X\n", dwAddress);
-#else
-			msg("sig found at %X\n", dwAddress);
-#endif
-            dwAddress = find_binary( dwAddress + 1, inf.max_ea, strSig.c_str( ), 16, SEARCH_DOWN );
-        } while (IsValidEA( dwAddress ));
-    }
-    else
-    {
-        dwAddress = find_binary( inf.omin_ea, inf.omax_ea, strSig.c_str( ), 16, SEARCH_DOWN );
+	dwAddress = find_binary(inf.omin_ea, inf.omax_ea, strSig.c_str(), 16, SEARCH_DOWN);
 
-        if (IsValidEA( dwAddress ))
-        {
-            do
-            {
-#ifdef __EA64__
-                msg( "sig found at 1%X\n", dwAddress );
-#else
-				msg("sig found at %X\n", dwAddress);
-#endif
-                dwAddress = find_binary( dwAddress + 1, inf.omax_ea, strSig.c_str( ), 16, SEARCH_DOWN );
-            } while (IsValidEA( dwAddress ));
-        }
-    }
+	if (IsValidEA(dwAddress))
+	{
+		do
+		{
+			msg("sig found at %llX\n", dwAddress);
+			dwAddress = find_binary(dwAddress + 1, inf.omax_ea, strSig.c_str(), 16, SEARCH_DOWN);
+		} while (IsValidEA(dwAddress));
+	}
     msg( pszMessage );
 }
 

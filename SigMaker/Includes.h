@@ -5,6 +5,9 @@
 #define __NT__                  1
 #define __X64__                 1
 
+#pragma warning( push )  
+#pragma warning( disable : 4267 )
+#pragma warning( disable : 4244 )
 #include <ida.hpp>
 #include <idp.hpp>
 #include <enum.hpp>
@@ -26,6 +29,7 @@
 #include <ua.hpp>
 #include <fpro.h>
 #include <diskio.hpp>
+#pragma warning( pop ) 
 
 #pragma comment(lib, "ida.lib")
 #pragma comment(lib, "pro.lib")

@@ -165,7 +165,7 @@ void IDAToCRC( const qstring& strSig, ea_t& dwCRC32, ea_t& dwMask )
     {
         if (i <= iCount && szMask[i] == 'x')
         {
-            dwMask |= (1 << i);
+            dwMask |= (1i64 << i);
         }
         else
         {
@@ -186,7 +186,7 @@ void CodeToCRC( const qstring& strByteSig, const qstring& strMask, ea_t& dwCRC32
     {
         if (i <= iCount && szMask[i] == 'x')
         {
-            dwMask |= 1 << i;
+            dwMask |= 1i64 << i;
         }
         else
         {
