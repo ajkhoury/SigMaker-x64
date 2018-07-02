@@ -20,6 +20,6 @@ Visual Studio will also expect the SDK to be located at %IDADIR%\idasdk. Make su
 
 # Running the build
 
-Because IDA no longer has a native 32-bit compiled version anymore, the Release/Debug is the build script for the 32-bit version of IDA and Release64/Debug64 is the build script for the 64-bit version. 
+Because IDA no longer has a native 32-bit compiled version anymore, the Release/Debug scenarios are the build scripts for the 32-bit version of IDA and Release64/Debug64 are the build scripts for the 64-bit version.
 
 **Do not change the target platform from x64!**

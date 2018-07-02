@@ -400,6 +400,11 @@ void GenerateSig( SigType eType )
             }
         }
     }
+    else
+    {
+        msg("Failed to automatically generate signature at %X\n", dwAddress);
+        return;
+    }
 
     qstring strSig = (*SigIterator).strSig, strTmp;
     char szMask[MAXSTR];
