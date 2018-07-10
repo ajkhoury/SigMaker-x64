@@ -95,12 +95,17 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(IDADIR)\plugins\sigmaker.dll</OutputFile>
       <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_32;$(IDADIR)\idasdk\lib\x64_win_vc_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
       <AdditionalDependencies>ida.lib;pro.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker.dll"</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug64|x64'">
     <ClCompile>
@@ -114,12 +119,15 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(IDADIR)\plugins\sigmaker64.dll</OutputFile>
       <AdditionalLibraryDirectories>$(IDADIR)\idasdk\lib\x64_win_vc_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
       <AdditionalDependencies>ida.lib;pro.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker64.dll"</Command>
+      <Message>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker64.dll"</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -138,7 +146,6 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>$(IDADIR)\plugins\sigmaker.dll</OutputFile>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>
@@ -153,6 +160,12 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker.dll"</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release64|x64'">
     <ClCompile>
@@ -172,7 +185,6 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>$(IDADIR)\plugins\sigmaker64.dll</OutputFile>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <AdditionalDependencies>ida.lib;pro.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -184,6 +196,12 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker64.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>copy "$(TargetDir)$(TargetName)$(TargetExt)" "$(IDADIR)\plugins\sigmaker64.dll"</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Includes.h" />
