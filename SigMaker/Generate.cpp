@@ -227,7 +227,7 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
                     msg( "not enough candidates to proceed. aborting...\n" );
                     return false;
                 }
-                vecSig.erase( i );
+                vecSig.erase( i-- );
                 continue;
             }
             (*i).iOpCount++;
