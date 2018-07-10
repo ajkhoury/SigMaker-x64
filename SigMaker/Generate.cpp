@@ -90,7 +90,7 @@ bool AddOneInstructionToSig( qstring& strSig, ea_t& dwCurentAddress )
     return true;
 }
 
-bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
+bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 {
     qSigVector vecSig; // remove previous entries
 
@@ -212,9 +212,14 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
             return false;
         }
 
-        for (qSigVector::iterator i = vecSig.begin( ); i != vecSig.end( ); i++)
+        for (size_t i = 0; i < vecSig.size( ); i++)
         {
-            if (AddOneInstructionToSig( (*i).strSig, (*i).dwCurrentAddress ) == false)
+            if (AddOneInstructionToSig( vecSig[i].strSig, vecSig[i].dwCurrentAddress ))
+            {
+                vecSig[i].iOpCount++;
+                vecSig[i].iHitCount = (vecSig[i].strSig.length( ) > 5) ? GetOccurenceCount( vecSig[i].strSig, true ) : 0;
+            }
+            else
             {
                 if (Settings.iLogLevel >= 2)
                 {
@@ -227,31 +232,32 @@ bool AutoGenerate( qSigVector& refvecSig, ea_t dwAddress )
                     msg( "not enough candidates to proceed. aborting...\n" );
                     return false;
                 }
-                vecSig.erase( i-- );
-                continue;
-            }
-            (*i).iOpCount++;
-            (*i).iHitCount = ((*i).strSig.length( ) > 5) ? GetOccurenceCount( (*i).strSig, true ) : 0;
+
+                vecSig.erase( vecSig.begin( ) + i );
+                i--;
+            }            
         }
     } while (HasOneHitSig( vecSig ) == false);
 
     refvecSig.clear( );
 
 
-    for (qSigVector::iterator i = vecSig.begin( ); i != vecSig.end( ); i++)
+    for (AutoSig_t& iterSig : vecSig)
     {
-
-        if ((*i).iHitCount == 1)
+        if (iterSig.iHitCount == 1)
         {
             if (Settings.iLogLevel >= 3)
             {
-                msg( "[%x] Signature %s is viable candidate for final evaluation.\n", (*i).dwStartAddress, (*i).strSig.c_str( ) );
+                msg( "[%x] Signature %s is a viable candidate for final evaluation.\n", iterSig.dwStartAddress, iterSig.strSig.c_str( ) );
             }
-            refvecSig.push_back( (*i) );
+
+            refvecSig.push_back( iterSig );
         }
     }
+
     hide_wait_box( );
     vecSig.clear( );
+
     return (refvecSig.size( ) != 0);
 }
 
@@ -350,7 +356,7 @@ unsigned int GetCharCount( const char* pszString, char chSign, bool bCaseInsenst
 void GenerateSig( SigType eType )
 {
     qSigVector vecSig;
-    qSigVector::iterator SigIterator;
+    qSigVector::iterator iterSig;
     size_t uiLength = 9999;
 
     ea_t dwAddress = get_screen_ea( );
@@ -364,37 +370,37 @@ void GenerateSig( SigType eType )
         return;
     }
 
-    if (AutoGenerate( vecSig, dwAddress ))
+    if (AutoGenerate( dwAddress, vecSig ))
     {
-        for (qSigVector::iterator i = vecSig.begin( ); i != vecSig.end( ); i++)
+        for (AutoSig_t& i : vecSig)
         {
             if (Settings.iSelectionType == 0)
             {
-                size_t nLength = (*i).strSig.length( );
-                if (uiLength > nLength || ((*i).eType == PT_DIRECT && uiLength == nLength))
+                size_t nLength = i.strSig.length( );
+                if (uiLength > nLength || (i.eType == PT_DIRECT && uiLength == nLength))
                 {
                     uiLength = nLength;
-                    SigIterator = i;
+                    iterSig = &i;
                 }
             }
             else
             {
                 if (Settings.iSelectionType == 1)
                 {
-                    if (uiLength > (*i).iOpCount || ((*i).eType == PT_DIRECT && uiLength == (*i).iOpCount))
+                    if (uiLength > i.iOpCount || (i.eType == PT_DIRECT && uiLength == i.iOpCount))
                     {
-                        uiLength = (*i).iOpCount;
-                        SigIterator = i;
+                        uiLength = i.iOpCount;
+                        iterSig = &i;
                     }
                 }
                 else
                 {
-                    unsigned int nLength = GetCharCount( (*i).strSig.c_str( ), '?' );
+                    unsigned int nLength = GetCharCount( i.strSig.c_str( ), '?' );
 
-                    if (uiLength > nLength || ((*i).eType == PT_DIRECT && uiLength == nLength))
+                    if (uiLength > nLength || (i.eType == PT_DIRECT && uiLength == nLength))
                     {
                         uiLength = nLength;
-                        SigIterator = i;
+                        iterSig = &i;
                     }
                 }
             }
@@ -406,7 +412,7 @@ void GenerateSig( SigType eType )
         return;
     }
 
-    qstring strSig = (*SigIterator).strSig, strTmp;
+    qstring strSig = iterSig->strSig, strTmp;
     char szMask[MAXSTR];
     ea_t dwStart, dwEnd;
 
@@ -428,13 +434,13 @@ void GenerateSig( SigType eType )
 
     if (Settings.iLogLevel >= 1)
     {
-        switch ((*SigIterator).eType)
+        switch (iterSig->eType)
         {
         case PT_DIRECT:
             msg( "sig: %s\n", strSig.c_str( ) );
             break;
         case PT_FUNCTION:
-            msg( "sig to containing function: (+0x%X) %s\n", dwAddress - (*SigIterator).dwStartAddress, strSig.c_str( ) );
+            msg( "sig to containing function: (+0x%X) %s\n", dwAddress - iterSig->dwStartAddress, strSig.c_str( ) );
             break;
         case PT_REFERENCE:
             msg( "direct reference: [actual address in first opcode] %s\n", strSig.c_str( ) );

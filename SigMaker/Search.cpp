@@ -2,10 +2,11 @@
 
 bool HasOneHitSig( qSigVector& vecSig )
 {
-    for (qSigVector::iterator i = vecSig.begin( ); i != vecSig.end( ); i++)
-        if ((*i).iHitCount == 1)
+    for (AutoSig_t& iterSig : vecSig)
+    {
+        if (iterSig.iHitCount == 1)
             return true;
-
+    }
     return false;
 }
 
