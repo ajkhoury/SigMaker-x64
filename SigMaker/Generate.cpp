@@ -237,7 +237,7 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
                 i--;
             }            
         }
-    } while (HasOneHitSig( vecSig ) == false);
+    } while (HasOneHitSig( vecSig ) == false && vecSig.size() > 0);
 
     refvecSig.clear( );
 
