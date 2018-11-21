@@ -54,7 +54,7 @@ void ShowSearchDialog( const char* pszSignature, const char* pszMask )
         "Test Sig\n"
         "\n"
         "\n"
-        "  <Signature:A5:100:100::>\n"
+        "  <Signature:A5:300:300::>\n"
         "  <Mask:A6:100:100::>\n"
         "\n";
 
@@ -131,7 +131,7 @@ void ShowSearchWindow( void )
         "Test Sig\n"
         "\n"
         "\n"
-        "  <Signature:A5:100:100::>\n"
+        "  <Signature:A5:200:200::>\n"
         "\n";
 
     qstring strSig;
