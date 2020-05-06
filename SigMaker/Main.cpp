@@ -43,10 +43,10 @@ bool idaapi run( size_t /*arg*/ )
         "What do you want to do?\n"
         "<#Auto create ida pattern:R>\n" // 0
         "<#Auto create code pattern:R>\n" // 1
-        "<#Auto create crc32 pattern:R>\n" // 2
+        "<#Auto create crc32 checksum:R>\n" // 2
         "<#Create ida pattern from selection:R>\n" // 3
         "<#Create code pattern from selection:R>\n" // 4
-        "<#Create crc32 pattern from selection:R>\n" // 5
+        "<#Create crc32 checksum from selection:R>\n" // 5
         "<#Test ida pattern:R>\n" // 6
         "<#Test code pattern:R>\n" // 7
         "<#Convert a sig:R>\n" // 8
