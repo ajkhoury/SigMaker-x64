@@ -10,6 +10,20 @@ bool HasOneHitSig( qSigVector& vecSig )
     return false;
 }
 
+#undef find_binary
+inline ea_t find_binary(
+	ea_t start_ea,
+	ea_t end_ea,
+	const uchar* mask,
+	size_t len,
+	int flags)
+{
+	compiled_binpat_vec_t bbv;
+	compiled_binpat_t& bv = bbv.push_back();
+	bv.mask.append(mask, len);
+	return bin_search2(start_ea, end_ea, bbv, flags);
+}
+
 int GetOccurenceCount( const qstring& strSig, bool bSkipOut = false )
 {
     int iCount = 0;
