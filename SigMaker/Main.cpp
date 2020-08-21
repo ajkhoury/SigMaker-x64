@@ -35,78 +35,83 @@ void ShowOptions( void )
     }
 }
 
-bool idaapi run( size_t /*arg*/ )
+struct plugin_ctx_t : public plugmod_t
 {
-    int iAction = 0;
+	virtual bool idaapi run(size_t) override;
+};
 
-    int iResult = ask_form(
-        "What do you want to do?\n"
-        "<#Auto create ida pattern:R>\n" // 0
-        "<#Auto create code pattern:R>\n" // 1
-        "<#Auto create crc32 checksum:R>\n" // 2
-        "<#Create ida pattern from selection:R>\n" // 3
-        "<#Create code pattern from selection:R>\n" // 4
-        "<#Create crc32 checksum from selection:R>\n" // 5
-        "<#Test ida pattern:R>\n" // 6
-        "<#Test code pattern:R>\n" // 7
-        "<#Convert a sig:R>\n" // 8
-        "<#Configure the plugin:R>>\n\n" // 9
-        , &iAction );
+bool idaapi plugin_ctx_t::run(size_t)
+{
+	int iAction = 0;
 
-    if (iResult > 0)
-    {
-        switch (iAction)
-        {
-        case 0:
-            GenerateSig( SIG_IDA );
-            break;
-        case 1:
-            GenerateSig( SIG_CODE );
-            break;
-        case 2:
-            GenerateSig( SIG_CRC );
-            break;
-        case 3: 
-            CreateSig( SIG_IDA );
-            break;
-        case 4: 
-            CreateSig( SIG_CODE );
-            break;
-        case 5: 
-            CreateSig( SIG_CRC );
-            break;
-        case 6: 
-            ShowSearchWindow( );
-            break;
-        case 7: 
-            ShowSearchDialog( );
-            break;
-        case 8: 
-            ShowSigConverter( );
-            break;
-        case 9: 
-            ShowOptions( );
-            break;
-        }
-    }
+	int iResult = ask_form(
+		"What do you want to do?\n"
+		"<#Auto create ida pattern:R>\n" // 0
+		"<#Auto create code pattern:R>\n" // 1
+		"<#Auto create crc32 checksum:R>\n" // 2
+		"<#Create ida pattern from selection:R>\n" // 3
+		"<#Create code pattern from selection:R>\n" // 4
+		"<#Create crc32 checksum from selection:R>\n" // 5
+		"<#Test ida pattern:R>\n" // 6
+		"<#Test code pattern:R>\n" // 7
+		"<#Convert a sig:R>\n" // 8
+		"<#Configure the plugin:R>>\n\n" // 9
+		, &iAction);
 
-    return true;
+	if (iResult > 0)
+	{
+		switch (iAction)
+		{
+		case 0:
+			GenerateSig(SIG_IDA);
+			break;
+		case 1:
+			GenerateSig(SIG_CODE);
+			break;
+		case 2:
+			GenerateSig(SIG_CRC);
+			break;
+		case 3:
+			CreateSig(SIG_IDA);
+			break;
+		case 4:
+			CreateSig(SIG_CODE);
+			break;
+		case 5:
+			CreateSig(SIG_CRC);
+			break;
+		case 6:
+			ShowSearchWindow();
+			break;
+		case 7:
+			ShowSearchDialog();
+			break;
+		case 8:
+			ShowSigConverter();
+			break;
+		case 9:
+			ShowOptions();
+			break;
+		}
+	}
+
+	return true;
 }
 
-int idaapi init( void )
+static plugmod_t* idaapi init( void )
 {
     Settings.Init( );
     Settings.Load( "sigmaker.ini" );
 
-    return PLUGIN_OK;
+	return new plugin_ctx_t;
 }
 
 plugin_t PLUGIN = {
     IDP_INTERFACE_VERSION,
-    PLUGIN_KEEP,
+	PLUGIN_MULTI,
     init,
-    NULL,
-    run,
+	nullptr,
+	nullptr,
     "Creates a unique signature",
     "SigMaker plugin",
     "SigMaker",
