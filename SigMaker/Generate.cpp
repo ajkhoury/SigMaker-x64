@@ -220,7 +220,7 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
                     msg( "dropped a sig due to decompilation failure.\n" );
                 }
 
-                if (vecSig.size( ) < 1)
+                if ( vecSig.empty( ) )
                 {
                     hide_wait_box( );
                     msg( "not enough candidates to proceed. aborting...\n" );
@@ -231,7 +231,7 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
                 i--;
             }            
         }
-    } while (HasOneHitSig( vecSig ) == false && vecSig.size() > 0);
+    } while (HasOneHitSig( vecSig ) == false && !vecSig.empty( ) );
 
     refvecSig.clear( );
 
@@ -352,7 +352,7 @@ unsigned int GetCharCount( const char* pszString, char chSign, bool bCaseInsenst
 void GenerateSig( SigType eType )
 {
     qSigVector vecSig;
-    qSigVector::iterator iterSig;
+    qSigVector::iterator iterSig = nullptr;
     size_t uiLength = 9999;
 
     ea_t dwAddress = get_screen_ea( );
@@ -405,6 +405,11 @@ void GenerateSig( SigType eType )
     else
     {
         msg("Failed to automatically generate signature at %X\n", dwAddress);
+        return;
+    }
+
+    if(iterSig == nullptr) {
+        msg("iterSig is null (this should never happen)\n", dwAddress);
         return;
     }
 
