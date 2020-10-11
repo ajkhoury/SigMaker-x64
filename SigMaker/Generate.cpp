@@ -242,6 +242,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
         {
             if (Settings.iLogLevel >= 3)
             {
+                // remove trailing whitespace from signature
+                if (!iterSig.strSig.empty() && iterSig.strSig.last() == ' ')
+                    iterSig.strSig.remove_last();
+
                 msg( "[%x] Signature %s is a viable candidate for final evaluation.\n", iterSig.dwStartAddress, iterSig.strSig.c_str( ) );
             }
 
@@ -288,9 +292,7 @@ void CreateSig( SigType eType )
         }
 
         if (Settings.iLogLevel >= 2)
-        {
-            msg( "Sig %s\n", strSig.c_str( ) );
-        }
+            msg( "sig %s\n", strSig.c_str( ) );
     }
     else
     {
