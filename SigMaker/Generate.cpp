@@ -56,19 +56,13 @@ void AddInsToSig( insn_t *cmd, qstring& strSig )
         AddBytesToSig( strSig, cmd->ea, cmd->size );
         return;
     }
-    else
-    {
-        AddBytesToSig( strSig, cmd->ea, uiSize );
-    }
+
+    AddBytesToSig( strSig, cmd->ea, uiSize );
 
     if (MatchOperands( cmd, 0, uiSize ))
-    {
         AddBytesToSig( strSig, cmd->ea + uiSize, cmd->size - uiSize );
-    }
     else
-    {
         AddWhiteSpacesToSig( strSig, cmd->size - uiSize );
-    }
 }
 
 bool AddOneInstructionToSig( qstring& strSig, ea_t& dwCurentAddress )
@@ -434,16 +428,22 @@ void GenerateSig( SigType eType )
 
     if (Settings.iLogLevel >= 1)
     {
+        const ea_t delta = dwAddress - iterSig->dwStartAddress;
+
         switch (iterSig->eType)
         {
         case PT_DIRECT:
-            msg( "sig: %s\n", strSig.c_str( ) );
+            msg( "raw sig: %s\n", strSig.c_str( ) );
             break;
         case PT_FUNCTION:
-            msg( "sig to containing function: (+0x%X) %s\n", dwAddress - iterSig->dwStartAddress, strSig.c_str( ) );
+            msg( "function + offset sig: (+0x%X) %s\n", delta, strSig.c_str( ) );
             break;
         case PT_REFERENCE:
-            msg( "direct reference: [actual address in first opcode] %s\n", strSig.c_str( ) );
+            if(delta > 0)
+              msg( "direct reference sig: (+0x%X) %s\n", delta, strSig.c_str( ) );
+            else
+              msg( "direct reference sig: %s\n", strSig.c_str());
+
             break;
         }
     }
