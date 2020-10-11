@@ -409,7 +409,7 @@ void GenerateSig( SigType eType )
     }
 
     if(iterSig == nullptr) {
-        msg("iterSig is null (this should never happen)\n", dwAddress);
+        msg("iterSig is null (this should never happen) %X\n", dwAddress);
         return;
     }
 
