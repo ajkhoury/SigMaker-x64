@@ -56,19 +56,13 @@ void AddInsToSig( insn_t *cmd, qstring& strSig )
         AddBytesToSig( strSig, cmd->ea, cmd->size );
         return;
     }
-    else
-    {
-        AddBytesToSig( strSig, cmd->ea, uiSize );
-    }
+
+    AddBytesToSig( strSig, cmd->ea, uiSize );
 
     if (MatchOperands( cmd, 0, uiSize ))
-    {
         AddBytesToSig( strSig, cmd->ea + uiSize, cmd->size - uiSize );
-    }
     else
-    {
         AddWhiteSpacesToSig( strSig, cmd->size - uiSize );
-    }
 }
 
 bool AddOneInstructionToSig( qstring& strSig, ea_t& dwCurentAddress )
@@ -226,7 +220,7 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
                     msg( "dropped a sig due to decompilation failure.\n" );
                 }
 
-                if (vecSig.size( ) < 1)
+                if ( vecSig.empty( ) )
                 {
                     hide_wait_box( );
                     msg( "not enough candidates to proceed. aborting...\n" );
@@ -237,7 +231,7 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
                 i--;
             }            
         }
-    } while (HasOneHitSig( vecSig ) == false && vecSig.size() > 0);
+    } while (HasOneHitSig( vecSig ) == false && !vecSig.empty( ) );
 
     refvecSig.clear( );
 
@@ -248,6 +242,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
         {
             if (Settings.iLogLevel >= 3)
             {
+                // remove trailing whitespace from signature
+                if (!iterSig.strSig.empty() && iterSig.strSig.last() == ' ')
+                    iterSig.strSig.remove_last();
+
                 msg( "[%x] Signature %s is a viable candidate for final evaluation.\n", iterSig.dwStartAddress, iterSig.strSig.c_str( ) );
             }
 
@@ -294,9 +292,7 @@ void CreateSig( SigType eType )
         }
 
         if (Settings.iLogLevel >= 2)
-        {
-            msg( "Sig %s\n", strSig.c_str( ) );
-        }
+            msg( "sig %s\n", strSig.c_str( ) );
     }
     else
     {
@@ -356,7 +352,7 @@ unsigned int GetCharCount( const char* pszString, char chSign, bool bCaseInsenst
 void GenerateSig( SigType eType )
 {
     qSigVector vecSig;
-    qSigVector::iterator iterSig;
+    qSigVector::iterator iterSig = nullptr;
     size_t uiLength = 9999;
 
     ea_t dwAddress = get_screen_ea( );
@@ -412,6 +408,11 @@ void GenerateSig( SigType eType )
         return;
     }
 
+    if(iterSig == nullptr) {
+        msg("iterSig is null (this should never happen) %X\n", dwAddress);
+        return;
+    }
+
     qstring strSig = iterSig->strSig, strTmp;
     char szMask[MAXSTR];
     ea_t dwStart, dwEnd;
@@ -434,16 +435,25 @@ void GenerateSig( SigType eType )
 
     if (Settings.iLogLevel >= 1)
     {
+        const ea_t delta = dwAddress - iterSig->dwStartAddress;
+
         switch (iterSig->eType)
         {
         case PT_DIRECT:
-            msg( "sig: %s\n", strSig.c_str( ) );
+            msg( "raw sig: %s\n", strSig.c_str( ) );
             break;
         case PT_FUNCTION:
-            msg( "sig to containing function: (+0x%X) %s\n", dwAddress - iterSig->dwStartAddress, strSig.c_str( ) );
+            msg( "function + offset sig: (+0x%X) %s\n", delta, strSig.c_str( ) );
             break;
         case PT_REFERENCE:
-            msg( "direct reference: [actual address in first opcode] %s\n", strSig.c_str( ) );
+
+            func_t* func = get_func(dwAddress);
+
+            if(delta > 0 && func->start_ea != dwAddress)
+              msg( "direct reference sig: (+0x%X) %s\n", delta, strSig.c_str( ) );
+            else
+              msg( "direct reference sig: %s\n", strSig.c_str());
+
             break;
         }
     }
