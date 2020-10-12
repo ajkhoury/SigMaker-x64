@@ -446,7 +446,10 @@ void GenerateSig( SigType eType )
             msg( "function + offset sig: (+0x%X) %s\n", delta, strSig.c_str( ) );
             break;
         case PT_REFERENCE:
-            if(delta > 0)
+
+            func_t* func = get_func(dwAddress);
+
+            if(delta > 0 && func->start_ea != dwAddress)
               msg( "direct reference sig: (+0x%X) %s\n", delta, strSig.c_str( ) );
             else
               msg( "direct reference sig: %s\n", strSig.c_str());
