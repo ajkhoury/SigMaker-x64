@@ -32,6 +32,7 @@ struct Settings_t {
     unsigned int iMaxRefCount;
     int iKeepUnsafeData;
     int iLogLevel;
+    int iDoubleWildcard;
 
     void Init( void );
     void Save( const char* pszFileName );

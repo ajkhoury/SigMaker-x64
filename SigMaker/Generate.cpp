@@ -9,7 +9,7 @@ void AddBytesToSig( qstring& strSig, ea_t dwAddress, ea_t dwSize )
 void AddWhiteSpacesToSig( qstring& strSig, ea_t dwSize )
 {
     for (ea_t i = 0; i < dwSize; i++)
-        strSig.cat_sprnt( "? " );
+        strSig.cat_sprnt( Settings.iDoubleWildcard ? "?? " : "? " );
 }
 
 unsigned int getCurrentOpcodeSize( insn_t *cmd, unsigned int& uiCount )

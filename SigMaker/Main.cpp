@@ -3,12 +3,13 @@
  
 void ShowOptions( void )
 {
-    ushort selectionType, keepUnsafeData, logLevel;
+    ushort selectionType, keepUnsafeData, logLevel, doubleWildcard;
     char szBuffer[MAXSTR] = { 0 };
 
     selectionType = (ushort)Settings.iSelectionType;
     keepUnsafeData = (ushort)Settings.iKeepUnsafeData;
     logLevel = (ushort)Settings.iLogLevel;
+    doubleWildcard = (ushort) Settings.iDoubleWildcard;
     _itoa_s( Settings.iMaxRefCount, szBuffer, MAXSTR, 10 );
 
     int iResult = ask_form( 
@@ -23,13 +24,16 @@ void ShowOptions( void )
         "<#Log results:R>\n" // 1
         "<#Log errors and results:R>\n" // 2
         "<#Log errors, results and interim steps of all proceedures:R>>\n" // 3
-        , &selectionType, szBuffer, &keepUnsafeData, &logLevel );
+        "<#Single Wildcard (\?):R>\n" // 0
+        "<#Double Wildcard (\?\?):R>>\n" // 1
+        , &selectionType, szBuffer, &keepUnsafeData, &logLevel, &doubleWildcard);
 
     if (iResult > 0)
     {
         Settings.iSelectionType = selectionType;
         Settings.iKeepUnsafeData = keepUnsafeData;
         Settings.iLogLevel = logLevel;
+        Settings.iDoubleWildcard = doubleWildcard;
         qsscanf( szBuffer, "%i", &Settings.iMaxRefCount );      
         Settings.Save( "sigmaker.ini" );
     }
