@@ -131,7 +131,7 @@ void ShowSearchWindow( void )
         "Test Sig\n"
         "\n"
         "\n"
-        "  <Signature:A5:200:200::>\n"
+        "  <Signature:A5:1024:200::>\n"
         "\n";
 
     qstring strSig;
