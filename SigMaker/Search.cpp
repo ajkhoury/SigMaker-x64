@@ -115,9 +115,6 @@ void ShowSearchDialog( void )
         }
     }
 
-    if (strSig.length( ) < 3)
-        return;
-
     IDAToCode( strSig, strSigCode, szMask );
 
     qstrncpy( szSignature, strSigCode.c_str( ), sizeof( szSignature ) );
