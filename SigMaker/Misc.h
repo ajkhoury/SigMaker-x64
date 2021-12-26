@@ -47,6 +47,7 @@ bool HasOneHitSig( qSigVector& vecSig );
 int GetOccurenceCount( const qstring& strSig, bool bSkipOut );
 void SearchForSigs( const qstring& strSig );
 void ShowSearchDialog( const char* pszSignature, const char* pszMask );
+void ShowSearchDialogWithoutSelection(void);
 
 // generate.cpp
 void CreateSig( SigType eType );

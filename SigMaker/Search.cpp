@@ -48,6 +48,32 @@ void SearchForSigs( const qstring& strSig )
     msg( pszMessage );
 }
 
+void ShowSearchDialogWithoutSelection(void)
+{
+    static const char szForm[] =
+        "Test Sig\n"
+        "\n"
+        "\n"
+        "  <Signature:A5:300:300::>\n"
+        "  <Mask:A6:100:100::>\n"
+        "\n";
+
+    char szSignature[MAXSTR] = { 0 }, szMask[MAXSTR] = { 0 };
+
+    if (ask_form(szForm, szSignature, szMask) > 0)
+    {
+        show_wait_box("please wait...");
+        qstring strSig = "";
+        CodeToIDAC(strSig, szSignature, szMask);
+
+        if (Settings.iLogLevel >= 3)
+            msg("%s = %s %s\n", strSig.c_str(), szSignature, szMask);
+
+        SearchForSigs(strSig);
+        hide_wait_box();
+    }
+}
+
 void ShowSearchDialog( const char* pszSignature, const char* pszMask )
 {
     static const char szForm[] =

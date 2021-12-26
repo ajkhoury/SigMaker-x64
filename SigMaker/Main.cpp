@@ -49,8 +49,9 @@ bool idaapi run( size_t /*arg*/ )
         "<#Create crc32 checksum from selection:R>\n" // 5
         "<#Test ida pattern:R>\n" // 6
         "<#Test code pattern:R>\n" // 7
-        "<#Convert a sig:R>\n" // 8
-        "<#Configure the plugin:R>>\n\n" // 9
+        "<#Test code pattern without selection:R>\n" // 8
+        "<#Convert a sig:R>\n" // 9
+        "<#Configure the plugin:R>>\n\n" // 10
         , &iAction );
 
     if (iResult > 0)
@@ -81,10 +82,13 @@ bool idaapi run( size_t /*arg*/ )
         case 7: 
             ShowSearchDialog( );
             break;
-        case 8: 
-            ShowSigConverter( );
+        case 8:
+            ShowSearchDialogWithoutSelection( );
             break;
         case 9: 
+            ShowSigConverter( );
+            break;
+        case 10: 
             ShowOptions( );
             break;
         }
