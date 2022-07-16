@@ -122,8 +122,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
         dwCurrent != BADADDR;
         dwCurrent = get_next_cref_to( dwAddress, dwCurrent ))
     {
-        cancelled = cancelled || user_cancelled();
-        if (cancelled) break;
+        if (user_cancelled()) {
+            cancelled = true;
+            break;
+        }
         if (dwCurrent == dwAddress)
             continue;
 
@@ -203,8 +205,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 
     do
     {
-        cancelled = cancelled || user_cancelled();
-        if (cancelled) break;
+        if (user_cancelled()) {
+            cancelled = true;
+            break;
+        }
         if (nTotalCount < 1) // vecSig.size()
         {
             hide_wait_box( );
@@ -219,8 +223,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 
         for (size_t i = 0; i < vecSig.size( ); i++)
         {
-            cancelled = cancelled || user_cancelled();
-            if (cancelled) break;
+            if (user_cancelled()) {
+                cancelled = true;
+                break;
+            }
             if (AddOneInstructionToSig( vecSig[i].strSig, vecSig[i].dwCurrentAddress ))
             {
                 vecSig[i].iOpCount++;
@@ -251,8 +257,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 
     for (AutoSig_t& iterSig : vecSig)
     {
-        cancelled = cancelled || user_cancelled();
-        if (cancelled) break;
+        if (user_cancelled()) {
+            cancelled = true;
+            break;
+        }
         if (iterSig.iHitCount == 1)
         {
             if (Settings.iLogLevel >= 3)
