@@ -97,6 +97,7 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
     show_wait_box( "Please Wait..." );
 
     unsigned int nTotalCount = 0;
+    bool cancelled = false;
 
     refvecSig.clear( );
 
@@ -121,6 +122,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
         dwCurrent != BADADDR;
         dwCurrent = get_next_cref_to( dwAddress, dwCurrent ))
     {
+        if (user_cancelled()) {
+            cancelled = true;
+            break;
+        }
         if (dwCurrent == dwAddress)
             continue;
 
@@ -200,6 +205,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 
     do
     {
+        if (user_cancelled()) {
+            cancelled = true;
+            break;
+        }
         if (nTotalCount < 1) // vecSig.size()
         {
             hide_wait_box( );
@@ -214,6 +223,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 
         for (size_t i = 0; i < vecSig.size( ); i++)
         {
+            if (user_cancelled()) {
+                cancelled = true;
+                break;
+            }
             if (AddOneInstructionToSig( vecSig[i].strSig, vecSig[i].dwCurrentAddress ))
             {
                 vecSig[i].iOpCount++;
@@ -244,6 +257,10 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
 
     for (AutoSig_t& iterSig : vecSig)
     {
+        if (user_cancelled()) {
+            cancelled = true;
+            break;
+        }
         if (iterSig.iHitCount == 1)
         {
             if (Settings.iLogLevel >= 3)
@@ -258,6 +275,11 @@ bool AutoGenerate( ea_t dwAddress, qSigVector& refvecSig )
     hide_wait_box( );
     vecSig.clear( );
 
+    if (cancelled)
+    {
+        msg("Signature search was cancelled.\n");
+        return false;
+    }
     return (refvecSig.size( ) != 0);
 }
 
